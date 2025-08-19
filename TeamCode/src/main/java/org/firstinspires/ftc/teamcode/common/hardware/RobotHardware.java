@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.common.hardware;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,12 +13,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 //@Config
 public class RobotHardware {
-
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
-    private DcMotor strafeDrive = null;
-    private DcMotor frontSlide = null;
-    private DcMotor backSlide = null;
+    private DcMotorEx leftDrive = null;
+    private DcMotorEx rightDrive = null;
+    private DcMotorEx strafeDrive = null;
+    private DcMotorEx frontSlide = null;
+    private DcMotorEx backSlide = null;
 
     private Servo strafe = null;
     private Servo backDoor = null;
@@ -24,35 +26,32 @@ public class RobotHardware {
 
     private IMU imu = null;
 
-    private HardwareMap hardwareMap;
 
     private VisionPortal visionPortal;
     private AprilTagProcessor aprilTag;
     private final String webCamName = "WebCamFGC";
 
-    private static RobotHardware instance = null;
+//    private static RobotHardware instance = null;
+//
+//    public static RobotHardware getInstance() {
+//        if (instance == null) {
+//            instance = new RobotHardware();
+//        }
+//        return instance;
+//    }
 
-    public static RobotHardware getInstance() {
-        if (instance == null) {
-            instance = new RobotHardware();
-        }
-        return instance;
-    }
+    public RobotHardware(@NonNull final HardwareMap hardwareMap) {
+        this.leftDrive  = hardwareMap.get(DcMotorEx.class, "left_drive");
+        this.rightDrive = hardwareMap.get(DcMotorEx.class, "right_drive");
+        this.strafeDrive = hardwareMap.get(DcMotorEx.class,"strafe_drive");
 
-    public void init(final HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
+        this.frontSlide = hardwareMap.get(DcMotorEx.class, "frontSlide");
+        this.backSlide = hardwareMap.get(DcMotorEx.class,"backSlide");
+        this.strafe = hardwareMap.get(Servo.class,"strafe");
 
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        strafeDrive = hardwareMap.get(DcMotor.class,"strafe_drive");
-
-        frontSlide = hardwareMap.get(DcMotor.class, "frontSlide");
-        backSlide = hardwareMap.get(DcMotor.class,"backSlide");
-        strafe = hardwareMap.get(Servo.class,"strafe");
-
-        backDoor = hardwareMap.get(Servo.class,"doorBack");
-        frontDoor_left = hardwareMap.get(Servo.class,"doorLeft");
-        frontDoor_right = hardwareMap.get(Servo.class,"doorRight");
+        this.backDoor = hardwareMap.get(Servo.class,"doorBack");
+        this.frontDoor_left = hardwareMap.get(Servo.class,"doorLeft");
+        this.frontDoor_right = hardwareMap.get(Servo.class,"doorRight");
     }
 
 //    public void startCamera() {

@@ -23,8 +23,10 @@ public class MotorTest extends LinearOpMode {
     public static boolean read_only = true;
     public static boolean reverse_0 = false;
     public static boolean reset = true;
-    public static boolean set_power_mode_or_set_position_mode = false;
-    public static String motor_name_0 = "frontSlide";
+    public static boolean set_power_mode = false;
+    public static boolean otherMotor = false;
+    public static String motor_name_0 = "leftShooter";
+    public static String motor_name_1 = "rightShooter";
 
 
 
@@ -32,6 +34,10 @@ public class MotorTest extends LinearOpMode {
     public void runOpMode() {
         DcMotorEx motor0 = hardwareMap.get(DcMotorEx.class, motor_name_0);
         motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if(otherMotor){
+            DcMotorEx motor1 = hardwareMap.get(DcMotorEx.class, motor_name_1);
+            motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
         waitForStart();
         if (reset) {
             motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -42,7 +48,7 @@ public class MotorTest extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
-            if (set_power_mode_or_set_position_mode) {
+            if (set_power_mode) {
                 if (read_only) {
                     motor0.setPower(0);
                 }
@@ -68,7 +74,7 @@ public class MotorTest extends LinearOpMode {
 //                telemetry_M.addData("encoder_2", motor1.getCurrentPosition());
             }
             telemetry_M.addData("encoder_0", motor0.getCurrentPosition());
-            telemetry_M.addData("velocity_1", motor0.getVelocity());
+            telemetry_M.addData("velocity_0", motor0.getVelocity());
             telemetry_M.update();
         }
     }

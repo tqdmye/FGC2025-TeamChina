@@ -1,37 +1,59 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.checkerframework.checker.units.qual.C;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.TankDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.WjLiftOpenCommand;
 import org.firstinspires.ftc.teamcode.common.util.SlewRateLimiter;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.Ascent;
+//import org.firstinspires.ftc.teamcode.subsystems.Intake;
+//import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.TankDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Vision;
 
-@TeleOp(name = "FGC CommandOP")
+@TeleOp(name = "FGC TeleOp")
 public class FGCTeleOp extends CommandOpMode {
     private TriggerReader triggerReader;
     private SlewRateLimiter driverLimiter;
     private SlewRateLimiter turnLimiter;
 
-    //private List<LynxModule> allHubs;
+//    private List<LynxModule> allHubs;
 
     private TankDrive tankDrive;
-    private Lift lift;
-    private Intake intake;
+    private Ascent ascent;
+    private Vision vision;
+    private Shooter shooter;
+//    private Lift lift;
+//    private Intake intake;
     private GamepadEx gamepadEx1, gamepadEx2;
+    public State state;
 
+
+    public enum State{
+        FREE,
+        VISION,
+        SHOOT
+    }
 
 
     @Override
     public void initialize() {
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         CommandScheduler.getInstance().reset();
 
 //        for(LynxModule hub : allHubs) {
@@ -40,100 +62,63 @@ public class FGCTeleOp extends CommandOpMode {
 
         //Subsystems Initialization
         tankDrive = new TankDrive(hardwareMap);
-        lift = new Lift(hardwareMap);
-        intake = new Intake(hardwareMap);
+        ascent = new Ascent(hardwareMap);
+        vision = new Vision(telemetry, hardwareMap);
+        shooter = new Shooter(hardwareMap);
 
         gamepadEx1 = new GamepadEx(gamepad1);
-        gamepadEx2 = new GamepadEx(gamepad2);
 
         driverLimiter = new SlewRateLimiter(4);
-        turnLimiter = new SlewRateLimiter(3);
+//        turnLimiter = new SlewRateLimiter(3);
 
-    tankDrive.setDefaultCommand(
-        new TankDriveCommand(
-            tankDrive,
-            () -> -driverLimiter.calculate(gamepadEx1.getLeftY()) ,
-            () -> gamepadEx1.getRightX(),
-                () -> lift.shouldSlowDrive() || gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5));
+        state = State.FREE;
 
-    //        lift.setDefaultCommand(new LiftOpenLoopCommand(
-    //                lift, () -> gamepadEx2.getLeftY(), () -> -gamepadEx2.getRightY(),
-    //                () -> intake.getUpperMagPressed()
-    //        ));
+        tankDrive.setDefaultCommand(
+            new TankDriveCommand(
+                tankDrive,
+                () -> -driverLimiter.calculate(gamepadEx1.getLeftY()) ,
+                () -> gamepadEx1.getRightX(),
+                    () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5));
 
-    lift.setDefaultCommand(new WjLiftOpenCommand(
-            lift, () -> gamepadEx2.getLeftY(),
-            () -> -gamepadEx2.getRightY(),
-            () -> gamepadEx2.getButton(GamepadKeys.Button.X)
-    ));
+        gamepadEx1
+                .getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(new InstantCommand(()->ascent.ascentCloseloop()));
 
-    gamepadEx2
-        .getGamepadButton(GamepadKeys.Button.B)
-        .whenPressed(new InstantCommand(() -> intake.setArmState(Intake.ArmState.RISING)))
-        .whenReleased(new InstantCommand(() -> intake.setArmState(Intake.ArmState.IDLE)));
+        gamepadEx1
+                .getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(new InstantCommand(()->ascent.reset()));
 
-    gamepadEx2
-        .getGamepadButton(GamepadKeys.Button.A)
-        .whenPressed(new InstantCommand(() -> intake.setArmState(Intake.ArmState.FALLING)))
-        .whenReleased(new InstantCommand(() -> intake.setArmState(Intake.ArmState.IDLE)));
+        gamepadEx1
+                .getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(new InstantCommand(()-> ascent.ascentOpenloop()));
 
-    gamepadEx2
-        .getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-        .whenPressed(
-                new InstantCommand(
-                        () -> {
-                            intake.setRollerPower(1);
-                        }
-                ))
-        .whenReleased(
-                new InstantCommand(
-                        () -> {
-                            intake.setRollerPower(0.5);
-                        }
-        ));
+        gamepadEx1
+                .getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(new InstantCommand(()-> ascent.ascentOpenloopDown()));
 
-    gamepadEx2
-            .getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
-            .whenPressed(
-                    new InstantCommand(() -> {
-                        intake.setRollerPower(0);
-                    }
-                    ))
-            .whenReleased(new InstantCommand(
-                    () -> {
-                        intake.setRollerPower(0.5);
-                    }
-            ));
+//        gamepadEx1
+//                .getGamepadButton(GamepadKeys.Button.A)
+//                .whenPressed(
+//                        new ConditionalCommand(
+//                                new InstantCommand(()->this.state=State.FREE),
+//                                new InstantCommand(()->this.state=State.VISION),
+//                                ()->this.state == State.VISION));
 
-    gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(new InstantCommand(
-            () -> intake.switchLeftDoorState()
-    ));
+        gamepadEx1
+                .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whileHeld(new InstantCommand(()-> vision.driveWithVision(tankDrive,telemetry,true)));
 
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(new InstantCommand(
-                () -> intake.switchRightDoorState()
-        ));
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.A).whenPressed(
-                new InstantCommand(() -> intake.switchIntakeState())
-        );
-
-//        gamepadEx1.getGamepadButton(GamepadKeys.Button.B).whenPressed(
-//                new InstantCommand(() -> intake.setIntakePosition(Intake.IntakeState.GRAB))
-//        );
-//
-//        gamepadEx1.getGamepadButton(GamepadKeys.Button.Y).whenPressed(
-//                new InstantCommand(() -> intake.setIntakePosition(Intake.IntakeState.PUSH))
-//        );
-
-        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
-                new InstantCommand(() -> lift.resetEncoders())
-        );
-
-
-
-        //Buttons Binding
-
-
+        gamepadEx1
+                .getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new InstantCommand(()->shooter.startShoot(telemetry)),
+                                        new InstantCommand(()->state = State.FREE)),
+                                new SequentialCommandGroup(
+                                        new InstantCommand(()->shooter.stopShoot(telemetry)),
+                                        new InstantCommand(()->state = State.VISION)),
+                                        ()->state==State.SHOOT));
     }
 
     @Override
@@ -143,8 +128,6 @@ public class FGCTeleOp extends CommandOpMode {
 //        }
         CommandScheduler.getInstance().run();
     }
-
-
 
     public int getDPADAngle(GamepadEx gamepad) {
         if(gamepad == null) return -1;

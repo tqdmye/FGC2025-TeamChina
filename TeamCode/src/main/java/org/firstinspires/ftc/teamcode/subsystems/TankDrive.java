@@ -14,52 +14,43 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
 public class TankDrive extends SubsystemBase {
-    private final Motor leftDriveFront;
-    private final Motor rightDriveFront;
+    public final Motor leftDrive;
+    public final Motor rightDrive;
     private final IMU imu;
     private final DifferentialOdometry odometry;
 
 
     public TankDrive (final HardwareMap hardwareMap) {
-        leftDriveFront  = new Motor(hardwareMap, "left_drive");
-        rightDriveFront = new Motor(hardwareMap, "right_drive");
+        leftDrive  = new Motor(hardwareMap, "leftDrive");
+        rightDrive = new Motor(hardwareMap, "rightDrive");
 
-        leftDriveFront.setInverted(true);
-        rightDriveFront.setInverted(false);
-        leftDriveFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        rightDriveFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        leftDriveFront.setRunMode(Motor.RunMode.RawPower);
-        rightDriveFront.setRunMode(Motor.RunMode.RawPower);
+        leftDrive.setInverted(true);
+        rightDrive.setInverted(false);
+        leftDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        leftDrive.setRunMode(Motor.RunMode.RawPower);
+        rightDrive.setRunMode(Motor.RunMode.RawPower);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,  //todo
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));  //todo
         imu.initialize(parameters);
 
         odometry = new DifferentialOdometry(new Pose2d(
                 0, 0, Rotation2d.fromDegrees(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES))
         ), 16.9291);
-
-
-        //rightDriveBack.setDirection(DcMotorEx.Direction.FORWARD);
-        //strafeDrive.setDirection(DcMotorEx.Direction.FORWARD);
     }
 
     public void moveRobot(double x, double yaw) {
-        // Calculate left and right wheel powers.
         double leftPower    = x - yaw;
         double rightPower   = x + yaw;
 
-        // Normalize wheel powers to be less than 1.0
         leftPower = Range.clip(leftPower, -1, 1);
         rightPower = Range.clip(rightPower, -1, 1);
 
-        // Send powers to the wheels.
-        leftDriveFront.set(leftPower);
-        //leftDriveBack.setPower(leftPower);
-        rightDriveFront.set(rightPower);
-        //rightDriveBack.setPower(rightPower);
+        leftDrive.set(leftPower);
+        rightDrive.set(rightPower);
     }
 
     public Pose2d getPose() {
@@ -68,6 +59,6 @@ public class TankDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometry.updatePosition(leftDriveFront.getDistance(), rightDriveFront.getDistance());
+        odometry.updatePosition(leftDrive.getDistance(), rightDrive.getDistance());
     }
 }

@@ -15,22 +15,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.R;
 
 
-@TeleOp(name = "Test Shooter PID")
+@TeleOp(name = "Test double Shooter PID")
 @Config
-public class ShooterTest extends LinearOpMode {
+public class ShooterTestDual extends LinearOpMode {
     private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-    public static double setP = 1;
-    public static double setI = 0.0001;
-    public static double setD = 1;
-    public static double setF = 0;
-//    public static double setShooterPower = 0.8;
+    public static double setP = 0.1;
+    public static double setI = 0;
+    public static double setD = 0.01;
+    public static double setF = 1;
+    //    public static double setShooterPower = 0.8;
     public static double setPreShooterPower = 0.8;
     public static boolean isPIDControl = true;
-    public static double shooterMinVelocity = 1640;
-    public static double shooterVelocity = 2200;
-    public final int RPM = 6000;
-    public final double TPS = 28.0;
-    public final double coefficient = 0.013;
+    public static double shooterMinVelocity = 1040.0;
+    public static double frontShooterVelocity = 1420.0;
+    public static double backShooterVelocity = 2280.0;
 
 //    static final double     COUNTS_PER_MOTOR_REV    = 28.0;
 //    static final double     DRIVE_GEAR_REDUCTION    = 30.24;
@@ -60,9 +58,12 @@ public class ShooterTest extends LinearOpMode {
 
         backShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         frontShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        preShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        preShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         blender.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
+
+        backShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         preShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -88,24 +89,25 @@ public class ShooterTest extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            backShooter.setVelocity(shooterVelocity);
-            frontShooter.setVelocity(shooterVelocity);
+            backShooter.setVelocity(backShooterVelocity);
+            frontShooter.setVelocity(frontShooterVelocity);
 
-            if(backShooter.getVelocity() > shooterMinVelocity){
+            if(frontShooter.getVelocity() > shooterMinVelocity){
 //            if(gamepad1.a){
                 preShooter.setPower(setPreShooterPower);
                 blender.setPower(1);
                 intake.setPower(1);
             }
 
-            if(backShooter.getVelocity() < shooterMinVelocity){
+            if(frontShooter.getVelocity() < shooterMinVelocity){
 //            if(gamepad1.b){
-//                preShooter.set(0);
+                preShooter.setPower(0);
                 blender.setPower(0);
                 intake.setPower(0);
             }
 
-            telemetry_M.addData("Shooter Velocity", backShooter.getVelocity());
+            telemetry_M.addData("Front Shooter Velocity", frontShooter.getVelocity());
+            telemetry_M.addData("Back Shooter Velocity", backShooter.getVelocity());
             telemetry_M.addData("PreShooter Velocity", preShooter.getVelocity());
             telemetry_M.update();
         }

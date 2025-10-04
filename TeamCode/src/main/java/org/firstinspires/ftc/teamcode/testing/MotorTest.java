@@ -20,13 +20,15 @@ public class MotorTest extends LinearOpMode {
     private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     public static int encoder_position = 1150;
     public static double max_power = 1;
+    public static int shooterVelocity = 1800;
     public static boolean read_only = true;
     public static boolean reverse_0 = false;
     public static boolean reset = true;
     public static boolean set_power_mode = false;
+    public static boolean isSetVelocity = false;
     public static boolean otherMotor = false;
-    public static String motor_name_0 = "leftShooter";
-    public static String motor_name_1 = "rightShooter";
+    public static String motor_name_0 = "backShooter";
+    public static String motor_name_1 = "frontShooter";
 
 
 
@@ -59,14 +61,19 @@ public class MotorTest extends LinearOpMode {
 
             } else {
                 if (!read_only) {
-                    motor0.setTargetPosition(encoder_position);
-                    motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motor0.setPower(max_power);
+                    if(isSetVelocity){
+                        motor0.setVelocity(shooterVelocity);
+                    }
+                    else {
+                        motor0.setTargetPosition(encoder_position);
+                        motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        motor0.setPower(max_power);
 
-                    sleep(10000);
-                    motor0.setTargetPosition(0);
-                    motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    motor0.setPower(max_power);
+                        sleep(10000);
+                        motor0.setTargetPosition(0);
+                        motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        motor0.setPower(max_power);
+                    }
                 }
                 telemetry_M.addData("is busy_1", motor0.isBusy());
 //                telemetry_M.addData("encoder_1", motor0.getCurrentPosition());

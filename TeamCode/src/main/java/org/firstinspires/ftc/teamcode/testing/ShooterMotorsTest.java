@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.testing;
 
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,33 +11,21 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.R;
 
 
-@TeleOp(name = "Test Shooter PID")
+@TeleOp(name = "Shooter motor test")
 @Config
-public class ShooterTest extends LinearOpMode {
+public class ShooterMotorsTest extends LinearOpMode {
     private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     public static double setP = 1;
     public static double setI = 0.0001;
     public static double setD = 1;
     public static double setF = 0;
-//    public static double setShooterPower = 0.8;
+    public static double setShooterPower = 0.8;
     public static double setPreShooterPower = 0.8;
     public static boolean isPIDControl = true;
     public static double shooterMinVelocity = 1640;
-    public static double shooterVelocity = 2200;
-    public final int RPM = 6000;
-    public final double TPS = 28.0;
-    public final double coefficient = 0.013;
-
-//    static final double     COUNTS_PER_MOTOR_REV    = 28.0;
-//    static final double     DRIVE_GEAR_REDUCTION    = 30.24;
-//    static final double     WHEEL_CIRCUMFERENCE_MM  = 90.0 * 3.14;
-//
-//    static final double     COUNTS_PER_WHEEL_REV    = COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION;
-//    static final double     COUNTS_PER_MM           = COUNTS_PER_WHEEL_REV / WHEEL_CIRCUMFERENCE_MM;
+    public static double shooterVelocity = 1800;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -47,14 +35,8 @@ public class ShooterTest extends LinearOpMode {
         DcMotorEx blender = hardwareMap.get(DcMotorEx.class, "blender");
         DcMotorEx intake = hardwareMap.get(DcMotorEx.class, "intake");
 
-//        backShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        frontShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//
-//        double TPS = (175/ 60) * COUNTS_PER_WHEEL_REV;
-
-        frontShooter.setDirection(DcMotorSimple.Direction.REVERSE);
         backShooter.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontShooter.setDirection(DcMotorSimple.Direction.REVERSE);
         preShooter.setDirection(DcMotorSimple.Direction.REVERSE);
         blender.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -79,36 +61,34 @@ public class ShooterTest extends LinearOpMode {
         }
 
         waitForStart();
-
-//        backShooter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        frontShooter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        backShooter.setVelocity(TPS);
-//        frontShooter.setVelocity(TPS);
-
-
         while (opModeIsActive()) {
-            backShooter.setVelocity(shooterVelocity);
-            frontShooter.setVelocity(shooterVelocity);
-
-            if(backShooter.getVelocity() > shooterMinVelocity){
-//            if(gamepad1.a){
-                preShooter.setPower(setPreShooterPower);
-                blender.setPower(1);
-                intake.setPower(1);
+            if(isPIDControl){
+                backShooter.setVelocity(shooterVelocity);
+                frontShooter.setVelocity(shooterVelocity);
+            }
+            else{
+                backShooter.setPower(setShooterPower);
+                frontShooter.setPower(setShooterPower);
             }
 
-            if(backShooter.getVelocity() < shooterMinVelocity){
-//            if(gamepad1.b){
+            if(backShooter.getVelocity() > shooterMinVelocity || gamepad1.a){
+                preShooter.setPower(setPreShooterPower);
+                blender.setPower(1);
+                intake.setPower(0.8);
+            }
+            if(backShooter.getVelocity() < shooterMinVelocity || gamepad1.b){
 //                preShooter.set(0);
                 blender.setPower(0);
                 intake.setPower(0);
+            }
+            if(gamepad1.dpad_down){
+                backShooter.setPower(0);
+                frontShooter.setPower(0);
             }
 
             telemetry_M.addData("Shooter Velocity", backShooter.getVelocity());
             telemetry_M.addData("PreShooter Velocity", preShooter.getVelocity());
             telemetry_M.update();
         }
-
     }
 }

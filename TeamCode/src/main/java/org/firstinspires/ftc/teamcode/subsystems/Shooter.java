@@ -1,94 +1,77 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.constants.OtherConstants;
 
-public class Shooter{
-    private Motor leftShooter;
-    private Motor rightShooter;
-    private Motor preShooter;
-    private Motor blender;
-    private Motor intake;
+public class Shooter extends SubsystemBase {
+    public DcMotorEx backShooter, frontShooter, preShooter, blender, intake;
 
     public Shooter (final HardwareMap hardwareMap) {
-        this.leftShooter = new Motor(hardwareMap, "leftShooter", 28, 6000);
-        this.rightShooter = new Motor(hardwareMap, "rightShooter", 28, 6000);
-        this.preShooter = new Motor(hardwareMap, "preShooter", 28, 6000);
-        this.blender = new Motor(hardwareMap, "blender", 28, 6000);
-        this.intake = new Motor(hardwareMap, "intake",28,6000);
+        this.backShooter = hardwareMap.get(DcMotorEx.class, "backShooter");
+        this.frontShooter = hardwareMap.get(DcMotorEx.class, "frontShooter");
+        this.preShooter = hardwareMap.get(DcMotorEx.class, "preShooter");
+        this.blender = hardwareMap.get(DcMotorEx.class, "blender");
+        this.intake = hardwareMap.get(DcMotorEx.class, "intake");
 
-        leftShooter.setInverted(false);
-        rightShooter.setInverted(true);
-        preShooter.setInverted(true);
-        blender.setInverted(true);
+        frontShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        backShooter.setDirection(DcMotorSimple.Direction.FORWARD);
+        preShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        blender.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
-        rightShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
-        preShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        intake.setZeroPowerBehavior(Motor.ZeroPowerBehavior.FLOAT);
+        backShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        frontShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        preShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        blender.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        leftShooter.resetEncoder();
-        rightShooter.resetEncoder();
-        preShooter.resetEncoder();
+        preShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        preShooter.setRunMode(Motor.RunMode.RawPower);
+        backShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftShooter.setRunMode(Motor.RunMode.VelocityControl);
-        rightShooter.setRunMode(Motor.RunMode.VelocityControl);
-        leftShooter.setVeloCoefficients(OtherConstants.SHOOTER_P.value, OtherConstants.SHOOTER_I.value, OtherConstants.SHOOTER_D.value);
-        rightShooter.setVeloCoefficients(OtherConstants.SHOOTER_P.value, OtherConstants.SHOOTER_I.value, OtherConstants.SHOOTER_D.value);
+        backShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        backShooter.setVelocityPIDFCoefficients(OtherConstants.SHOOTER_P.value, OtherConstants.SHOOTER_I.value, OtherConstants.SHOOTER_D.value, OtherConstants.SHOOTER_F.value);
+//        frontShooter.setVelocityPIDFCoefficients(OtherConstants.SHOOTER_P.value, OtherConstants.SHOOTER_I.value, OtherConstants.SHOOTER_D.value,OtherConstants.SHOOTER_F.value);
 
-        leftShooter.set(OtherConstants.SHOOTER_PREPARE_POWER.value); /***/
+        backShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
+        frontShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
     }
 
-    public void startShoot(Telemetry telemetry){
-        leftShooter.set(OtherConstants.SHOOTER_POWER.value);
-        rightShooter.set(OtherConstants.SHOOTER_POWER.value);
 
-        if(leftShooter.encoder.getRawVelocity() > OtherConstants.SHOOTER_MIN_VELOCITY.value){
-            preShooter.set(OtherConstants.PRESHOOTER_POWER.value);
-            blender.set(1);
-            intake.set(0.8);
-        }
-
-        if(leftShooter.encoder.getRawVelocity() < OtherConstants.SHOOTER_MIN_VELOCITY.value){
-//                preShooter.set(0);
-            blender.set(0);
-            intake.set(0);
-        }
-
-        telemetry.addData("Acceleration", leftShooter.encoder.getAcceleration());
-        telemetry.addData("CorrectedVelocity", leftShooter.encoder.getCorrectedVelocity());
-        telemetry.addData("Shooter Velocity", leftShooter.encoder.getRawVelocity());
-        telemetry.addData("PreShooter Velocity", preShooter.encoder.getRawVelocity());
-
-        telemetry.update();
+    public void setShooterVelocity(double velocity) {
+        backShooter.setVelocity(OtherConstants.SHOOTER_VELOCITY.value);
+        frontShooter.setVelocity(OtherConstants.SHOOTER_VELOCITY.value);
     }
 
-    public void stopShoot(Telemetry telemetry){
-        leftShooter.set(OtherConstants.SHOOTER_PREPARE_POWER.value);
-        rightShooter.set(OtherConstants.SHOOTER_PREPARE_POWER.value);
-
-        if(leftShooter.encoder.getRawVelocity() < OtherConstants.SHOOTER_MIN_VELOCITY.value){
-//                preShooter.set(0);
-            blender.set(0);
-            intake.set(0);
-        }
-
-        telemetry.addData("Acceleration", leftShooter.encoder.getAcceleration());
-        telemetry.addData("CorrectedVelocity", leftShooter.encoder.getCorrectedVelocity());
-        telemetry.addData("Shooter Velocity", leftShooter.encoder.getRawVelocity());
-        telemetry.addData("PreShooter Velocity", preShooter.encoder.getRawVelocity());
-
-        telemetry.update();
+    public double getShooterVelocity() {
+        return backShooter.getVelocity();
     }
 
+    public void shooting(double power) {
+        preShooter.setPower(power > 0 ? OtherConstants.PRESHOOTER_POWER.value: 0);
+        blender.setPower(power > 0 ? OtherConstants.BLENDER_POWER.value : 0);
+        intake.setPower(power > 0 ? OtherConstants.INTAKE_POWER.value : 0);
+    }
+
+    public void stopAll() {
+        backShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
+        frontShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
+        preShooter.setPower(0);
+        blender.setPower(0);
+        intake.setPower(0);
+    }
+
+    public void counterPreShooter(){
+        preShooter.setPower(-OtherConstants.PRESHOOTER_POWER.value);
+    }
+
+    public void intake(){
+        preShooter.setPower(0);
+        intake.setPower(OtherConstants.INTAKE_POWER.value);
+    }
 }

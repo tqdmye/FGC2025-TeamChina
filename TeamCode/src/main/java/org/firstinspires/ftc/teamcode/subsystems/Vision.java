@@ -47,7 +47,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.common.constants.OtherConstants;
+import org.firstinspires.ftc.teamcode.common.constants.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -116,12 +116,12 @@ public class Vision{
         if (isDriveWithVision && targetFound) {
 
             // Determine heading and range error so we can use them to control the robot automatically.
-            double  rangeError   = (desiredTag.ftcPose.range - OtherConstants.VISION_DESIRED_DISTANCE.value);
+            double  rangeError   = (desiredTag.ftcPose.range - Constants.VISION_DESIRED_DISTANCE.value);
             double  headingError = desiredTag.ftcPose.bearing;
 
             // Use the speed and turn "gains" to calculate how we want the robot to move.  Clip it to the maximum
-            drive = Range.clip(rangeError * OtherConstants.VISION_SPEED_GAIN.value, -OtherConstants.VISION_MAX_AUTO_SPEED.value, OtherConstants.VISION_MAX_AUTO_SPEED.value);
-            turn  = Range.clip(headingError * OtherConstants.VISION_TURN_GAIN.value, -OtherConstants.VISION_MAX_AUTO_TURN.value, OtherConstants.VISION_MAX_AUTO_TURN.value) ;
+            drive = Range.clip(rangeError * Constants.VISION_SPEED_GAIN.value, -Constants.VISION_MAX_AUTO_SPEED.value, Constants.VISION_MAX_AUTO_SPEED.value);
+            turn  = Range.clip(headingError * Constants.VISION_TURN_GAIN.value, -Constants.VISION_MAX_AUTO_TURN.value, Constants.VISION_MAX_AUTO_TURN.value) ;
 
             telemetry.addData("Auto","Drive %5.2f, Turn %5.2f", drive, turn);
         }

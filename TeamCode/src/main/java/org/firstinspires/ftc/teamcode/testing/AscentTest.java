@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
-@TeleOp(name = "Ascent Test")
+@TeleOp(name = "Ascent Test", group = "test")
 @Config
 public class AscentTest extends LinearOpMode {
 

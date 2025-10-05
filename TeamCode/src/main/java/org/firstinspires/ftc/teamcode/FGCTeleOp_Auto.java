@@ -13,11 +13,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.commands.TankDriveCommand;
-import org.firstinspires.ftc.teamcode.common.constants.OtherConstants;
+import org.firstinspires.ftc.teamcode.common.constants.Constants;
 import org.firstinspires.ftc.teamcode.common.util.SlewRateLimiter;
 import org.firstinspires.ftc.teamcode.subsystems.Ascent;
 //import org.firstinspires.ftc.teamcode.subsystems.Intake;
 //import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.Pusher;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.TankDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Vision;
@@ -34,6 +35,7 @@ public class FGCTeleOp_Auto extends CommandOpMode {
     private Ascent ascent;
     private Vision vision;
     private Shooter shooter;
+    private Pusher pusher;
     private GamepadEx gamepadEx1, gamepadEx2;
     public State state;
 
@@ -59,11 +61,12 @@ public class FGCTeleOp_Auto extends CommandOpMode {
         ascent = new Ascent(hardwareMap);
         vision = new Vision(telemetry, hardwareMap);
         shooter = new Shooter(hardwareMap);
+        pusher = new Pusher(telemetry, hardwareMap);
 
         gamepadEx1 = new GamepadEx(gamepad1);
 
         driverLimiter = new SlewRateLimiter(4);
-//        turnLimiter = new SlewRateLimiter(3);
+        turnLimiter = new SlewRateLimiter(3);
 
         state = State.FREE;
 
@@ -106,8 +109,8 @@ public class FGCTeleOp_Auto extends CommandOpMode {
                 .getGamepadButton(GamepadKeys.Button.Y)
                 .whileHeld(new ShooterCommand(
                         shooter,
-                        OtherConstants.SHOOTER_VELOCITY.value,
-                        OtherConstants.SHOOTER_MIN_VELOCITY.value
+                        Constants.SHOOTER_VELOCITY.value,
+                        Constants.SHOOTER_MIN_VELOCITY.value
                 ));
         gamepadEx1
                 .getGamepadButton(GamepadKeys.Button.A)
@@ -116,13 +119,42 @@ public class FGCTeleOp_Auto extends CommandOpMode {
         gamepadEx1
                 .getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(new InstantCommand(()->shooter.intake()));
+
+        gamepadEx1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new InstantCommand(()->pusher.push()));
+
+        gamepadEx1.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(new InstantCommand(()->pusher.accelerate()));
+
+        gamepadEx1
+                .getGamepadButton(GamepadKeys.Button.Y)
+                .whileHeld(new InstantCommand(()->pusher.shoot()));
+
+//        new RunCommand(pusher::push, pusher).schedule();
+//
+//        gamepadEx1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+//                .whenPressed(pusher::nextState);
     }
+
 
     @Override
     public void run() {
-//        for(LynxModule hub : allHubs) {
-//            hub.clearBulkCache();
-//        }
+        double y = -gamepad1.right_stick_y;
+
+        if (Math.abs(y) > 0.05) {
+            if (pusher.potentiometer.getVoltage() * Constants.VOLT_TO_DEG.value > 150
+                    && y > 0) {
+                y = 0;
+            }
+            if (pusher.potentiometer.getVoltage() * Constants.VOLT_TO_DEG.value < 60
+                    && y < 0) {
+                y = 0;
+            }
+            pusher.manualControl(y * 0.5);
+        } else if (pusher.manualControl) {
+            pusher.disableManual();
+        }
+
         CommandScheduler.getInstance().run();
         updateTelemetry(telemetry);
     }

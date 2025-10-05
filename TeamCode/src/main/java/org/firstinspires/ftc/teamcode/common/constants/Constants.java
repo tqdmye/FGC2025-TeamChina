@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.common.constants;
 
-public enum OtherConstants {
+public enum Constants {
+    VOLT_TO_DEG(81.1),
+
     VISION_DESIRED_DISTANCE(120.0),
     VISION_SPEED_GAIN(0.04),
     VISION_TURN_GAIN(0.02),
@@ -22,7 +24,7 @@ public enum OtherConstants {
 
     public final double value;
 
-    OtherConstants(double value) {
+    Constants(double value) {
         this.value = value;
     }
 }

@@ -21,7 +21,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 
-@TeleOp(name = "Vision Test")
+@TeleOp(name = "Test Vision", group = "test")
 public class VisionTest extends LinearOpMode {
     private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     private AprilTagProcessor aprilTag;

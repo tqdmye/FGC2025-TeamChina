@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.common.constants.OtherConstants;
+import org.firstinspires.ftc.teamcode.common.constants.Constants;
 
 public class Shooter extends SubsystemBase {
     public DcMotorEx backShooter, frontShooter, preShooter, blender, intake;
@@ -35,17 +35,17 @@ public class Shooter extends SubsystemBase {
 
         backShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backShooter.setVelocityPIDFCoefficients(OtherConstants.SHOOTER_P.value, OtherConstants.SHOOTER_I.value, OtherConstants.SHOOTER_D.value, OtherConstants.SHOOTER_F.value);
-//        frontShooter.setVelocityPIDFCoefficients(OtherConstants.SHOOTER_P.value, OtherConstants.SHOOTER_I.value, OtherConstants.SHOOTER_D.value,OtherConstants.SHOOTER_F.value);
+//        backShooter.setVelocityPIDFCoefficients(Constants.SHOOTER_P.value, Constants.SHOOTER_I.value, Constants.SHOOTER_D.value, Constants.SHOOTER_F.value);
+//        frontShooter.setVelocityPIDFCoefficients(Constants.SHOOTER_P.value, Constants.SHOOTER_I.value, Constants.SHOOTER_D.value,Constants.SHOOTER_F.value);
 
-        backShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
-        frontShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
+        backShooter.setVelocity(Constants.SHOOTER_PREPARE_VELOCITY.value);
+        frontShooter.setVelocity(Constants.SHOOTER_PREPARE_VELOCITY.value);
     }
 
 
     public void setShooterVelocity(double velocity) {
-        backShooter.setVelocity(OtherConstants.SHOOTER_VELOCITY.value);
-        frontShooter.setVelocity(OtherConstants.SHOOTER_VELOCITY.value);
+        backShooter.setVelocity(Constants.SHOOTER_VELOCITY.value);
+        frontShooter.setVelocity(Constants.SHOOTER_VELOCITY.value);
     }
 
     public double getShooterVelocity() {
@@ -53,25 +53,25 @@ public class Shooter extends SubsystemBase {
     }
 
     public void shooting(double power) {
-        preShooter.setPower(power > 0 ? OtherConstants.PRESHOOTER_POWER.value: 0);
-        blender.setPower(power > 0 ? OtherConstants.BLENDER_POWER.value : 0);
-        intake.setPower(power > 0 ? OtherConstants.INTAKE_POWER.value : 0);
+        preShooter.setPower(power > 0 ? Constants.PRESHOOTER_POWER.value: 0);
+        blender.setPower(power > 0 ? Constants.BLENDER_POWER.value : 0);
+        intake.setPower(power > 0 ? Constants.INTAKE_POWER.value : 0);
     }
 
     public void stopAll() {
-        backShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
-        frontShooter.setVelocity(OtherConstants.SHOOTER_PREPARE_VELOCITY.value);
+        backShooter.setVelocity(Constants.SHOOTER_PREPARE_VELOCITY.value);
+        frontShooter.setVelocity(Constants.SHOOTER_PREPARE_VELOCITY.value);
         preShooter.setPower(0);
         blender.setPower(0);
         intake.setPower(0);
     }
 
     public void counterPreShooter(){
-        preShooter.setPower(-OtherConstants.PRESHOOTER_POWER.value);
+        preShooter.setPower(-Constants.PRESHOOTER_POWER.value);
     }
 
     public void intake(){
         preShooter.setPower(0);
-        intake.setPower(OtherConstants.INTAKE_POWER.value);
+        intake.setPower(Constants.INTAKE_POWER.value);
     }
 }

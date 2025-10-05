@@ -55,7 +55,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name="Tank Drive To AprilTag", group = "Concept")
+@TeleOp(name="Test Tank Drive To AprilTag", group = "test")
 @Config
 public class VisionTankDriveTest extends LinearOpMode {
     final static double DESIRED_DISTANCE = 12.0;

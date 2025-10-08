@@ -24,7 +24,7 @@ public class TankDrive extends SubsystemBase {
         leftDrive  = new Motor(hardwareMap, "leftDrive");
         rightDrive = new Motor(hardwareMap, "rightDrive");
 
-        leftDrive.setInverted(true);
+        leftDrive.setInverted(false);
         rightDrive.setInverted(false);
         leftDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);

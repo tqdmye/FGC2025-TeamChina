@@ -48,9 +48,9 @@ public class ShooterTest extends LinearOpMode {
 //
 //        double TPS = (175/ 60) * COUNTS_PER_WHEEL_REV;
 
-        frontShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontShooter.setDirection(DcMotorSimple.Direction.FORWARD);
         backShooter.setDirection(DcMotorSimple.Direction.FORWARD);
-        preShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        preShooter.setDirection(DcMotorSimple.Direction.FORWARD);
         blender.setDirection(DcMotorSimple.Direction.REVERSE);
 
         backShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);

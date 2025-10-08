@@ -18,8 +18,8 @@ public class PotentiometerTest extends LinearOpMode {
     public void runOpMode() {
         // Get the potentiometer and motor from hardwareMap
         potentiometer = hardwareMap.get(AnalogInput.class, "potentiometer");
-        pushLeft = hardwareMap.get(Servo.class, "pushLeft");
-        pushRight = hardwareMap.get(Servo.class, "pushRight");
+        pushLeft = hardwareMap.get(Servo.class, "leftPush");
+        pushRight = hardwareMap.get(Servo.class, "rightPush");
 
         // Loop while the Op Mode is running
         waitForStart();

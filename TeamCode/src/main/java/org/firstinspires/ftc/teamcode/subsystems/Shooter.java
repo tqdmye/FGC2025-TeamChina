@@ -6,21 +6,24 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.constants.Constants;
 
 public class Shooter extends SubsystemBase {
     public DcMotorEx backShooter, frontShooter, preShooter, blender, intake;
+    public Telemetry telemetry;
 
-    public Shooter (final HardwareMap hardwareMap) {
+    public Shooter (Telemetry telemetry, final HardwareMap hardwareMap) {
+        this.telemetry = telemetry;
         this.backShooter = hardwareMap.get(DcMotorEx.class, "backShooter");
         this.frontShooter = hardwareMap.get(DcMotorEx.class, "frontShooter");
         this.preShooter = hardwareMap.get(DcMotorEx.class, "preShooter");
         this.blender = hardwareMap.get(DcMotorEx.class, "blender");
         this.intake = hardwareMap.get(DcMotorEx.class, "intake");
 
-        frontShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontShooter.setDirection(DcMotorSimple.Direction.FORWARD);
         backShooter.setDirection(DcMotorSimple.Direction.FORWARD);
-        preShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        preShooter.setDirection(DcMotorSimple.Direction.FORWARD);
         blender.setDirection(DcMotorSimple.Direction.REVERSE);
 
         backShooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
@@ -43,9 +46,9 @@ public class Shooter extends SubsystemBase {
     }
 
 
-    public void setShooterVelocity(double velocity) {
-        backShooter.setVelocity(Constants.SHOOTER_VELOCITY.value);
-        frontShooter.setVelocity(Constants.SHOOTER_VELOCITY.value);
+    public void setShooterVelocity(double frontVelocity, double backVelocity) {
+        frontShooter.setVelocity(frontVelocity);
+        backShooter.setVelocity(backVelocity);
     }
 
     public double getShooterVelocity() {
@@ -71,7 +74,23 @@ public class Shooter extends SubsystemBase {
     }
 
     public void intake(){
-        preShooter.setPower(0);
+        preShooter.setPower(-Constants.PRESHOOTER_POWER.value);
         intake.setPower(Constants.INTAKE_POWER.value);
+        blender.setPower(Constants.BLENDER_POWER.value);
     }
+    public void counterIntake(){
+        intake.setPower(-Constants.INTAKE_POWER.value);
+        blender.setPower(-Constants.BLENDER_POWER.value);
+    }
+    public void reset(){
+        intake.setPower(0);
+        blender.setPower(0);
+        preShooter.setPower(0);
+    }
+
+//    public void periodic() {
+//        telemetry.addData("front shooter velocity", frontShooter.getVelocity());
+//        telemetry.addData("back shooter velocity", backShooter.getVelocity());
+//        telemetry.update();
+//    }
 }

@@ -97,7 +97,7 @@ public class FGCTeleOpSolo extends CommandOpMode {
                 .whileHeld(new ShooterCommand(shooter));
         gamepadEx1
                 .getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new InstantCommand(()->shooter.counterPreShooter()));
+                .whenPressed(new InstantCommand(()->shooter.counterPreShooterAndBlender()));
 
         gamepadEx1
                 .getGamepadButton(GamepadKeys.Button.X)
@@ -117,7 +117,7 @@ public class FGCTeleOpSolo extends CommandOpMode {
                 .whenPressed(new InstantCommand(()->ascent.brakeAscent()));
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(new InstantCommand(()->holder.hold()));
+                .whenPressed(new InstantCommand(()->holder.holdSolo()));
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(new InstantCommand(()->holder.open()));

@@ -4,16 +4,13 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 import org.firstinspires.ftc.teamcode.commands.TankDriveCommand;
 import org.firstinspires.ftc.teamcode.common.constants.Constants;
@@ -23,7 +20,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Holder;
 import org.firstinspires.ftc.teamcode.subsystems.Pusher;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.TankDrive;
-import org.firstinspires.ftc.teamcode.subsystems.Vision;
 
 @TeleOp(name = "FGC TeleOp Dual")
 public class FGCTeleOpDual extends CommandOpMode {
@@ -35,7 +31,7 @@ public class FGCTeleOpDual extends CommandOpMode {
 
     private TankDrive tankDrive;
     private Ascent ascent;
-    private Vision vision;
+//    private Vision vision;
     private Shooter shooter;
     private Pusher pusher;
     private Holder holder;
@@ -62,7 +58,7 @@ public class FGCTeleOpDual extends CommandOpMode {
         //Subsystems Initialization
         tankDrive = new TankDrive(hardwareMap);
         ascent = new Ascent(hardwareMap);
-        vision = new Vision(telemetry, hardwareMap);
+//        vision = new Vision(telemetry, hardwareMap);
         shooter = new Shooter(telemetry, hardwareMap);
         pusher = new Pusher(telemetry, hardwareMap);
         holder = new Holder(telemetry, hardwareMap);
@@ -82,9 +78,9 @@ public class FGCTeleOpDual extends CommandOpMode {
                         () -> gamepadEx1.getRightX(),
                         () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5));
 
-        gamepadEx1
-                .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whileHeld(new RunCommand(() -> vision.driveWithVision(tankDrive, telemetry, true)));
+//        gamepadEx1
+//                .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+//                .whileHeld(new RunCommand(() -> vision.driveWithVision(tankDrive, telemetry, true)));
 
         gamepadEx1
                 .getGamepadButton(GamepadKeys.Button.DPAD_UP)
@@ -102,15 +98,7 @@ public class FGCTeleOpDual extends CommandOpMode {
 
         gamepadEx2
                 .getGamepadButton(GamepadKeys.Button.Y)
-                .whileHeld(
-                        new ParallelCommandGroup(
-                                new InstantCommand(()->shooter.setShooterVelocity(Constants.FRONT_SHOOTER_VELOCITY.value, Constants.BACK_SHOOTER_VELOCITY.value)),
-                                new InstantCommand(()->pusher.shoot()),
-                                new ConditionalCommand(
-                                        new InstantCommand(()->shooter.shooting(1.0)),
-                                        new InstantCommand(()->shooter.shooting(0)),
-                                        ()->shooter.getShooterVelocity() >= Constants.FRONT_SHOOTER_VELOCITY.value)))
-                .whenReleased(new InstantCommand(()->shooter.stopAll()));
+                .whileHeld(new ShooterCommand(shooter));
         gamepadEx2
                 .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whileHeld(
@@ -120,7 +108,7 @@ public class FGCTeleOpDual extends CommandOpMode {
                 .whenReleased(new InstantCommand(()->shooter.setShooterVelocity(0,0)));
         gamepadEx2
                 .getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(new InstantCommand(()->shooter.intake()))
+                .whileHeld(new InstantCommand(()->shooter.intake()))
                 .whenReleased(new InstantCommand(()->shooter.reset()));
 
         gamepadEx2
@@ -130,28 +118,33 @@ public class FGCTeleOpDual extends CommandOpMode {
 
         gamepadEx2
                 .getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(new InstantCommand(()->shooter.counterPreShooter()))
+                .whenPressed(new InstantCommand(()->shooter.counterPreShooterAndBlender()))
                 .whenReleased(new InstantCommand(()->shooter.reset()));
 
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                 .whenPressed(new InstantCommand(()->holder.prepare()));
 
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(new InstantCommand(()->holder.hold_Dual()));
+                .whenPressed(new InstantCommand(()->holder.hold()));
 
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(new InstantCommand(()->holder.open()));
 
+//        gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+//                .whileHeld(
+//                        new ParallelCommandGroup(
+//                                new InstantCommand(()->pusher.accelerate()),
+//                                new InstantCommand(()->shooter.setShooterVelocity(Constants.FRONT_SHOOTER_VELOCITY.value,0))))
+//                .whenReleased(new InstantCommand(()->shooter.setShooterVelocity(0,0)));
         gamepadEx2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whileHeld(
-                        new ParallelCommandGroup(
-                                new InstantCommand(()->pusher.accelerate()),
-                                new InstantCommand(()->shooter.setShooterVelocity(Constants.FRONT_SHOOTER_VELOCITY.value,0))))
-                .whenReleased(new InstantCommand(()->shooter.setShooterVelocity(0,0)));
+                .whileHeld(new InstantCommand(()->shooter.stopIntake()))
+                .whenReleased(new InstantCommand(()->shooter.state= Shooter.ShooterState.INTAKE));
 
         gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(new InstantCommand(()->ascent.brakeAscent()));
     }
+
+    private boolean lastRightTriggerPressed = false;
 
     @Override
     public void run() {
@@ -162,6 +155,34 @@ public class FGCTeleOpDual extends CommandOpMode {
             ascent.unlockAscentDual();
         }
 
+
+        boolean rightTriggerPressed = gamepadEx2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5;
+
+        // 按住时 shooter 转动
+        if (rightTriggerPressed) {
+            pusher.accelerate();
+            shooter.setShooterVelocity(Constants.FRONT_SHOOTER_VELOCITY.value, 0);
+        }
+
+        // 松开瞬间时停止 shooter
+        if (lastRightTriggerPressed && !rightTriggerPressed) {
+            shooter.setShooterVelocity(0, 0);
+        }
+
+        lastRightTriggerPressed = rightTriggerPressed;
+
+//        if(gamepadEx2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)>0.5){
+//            if(shooter.state != Shooter.ShooterState.ACCELERATING){
+//                pusher.accelerate();
+//                shooter.setShooterVelocity(Constants.FRONT_SHOOTER_VELOCITY.value,0);
+//                shooter.state = Shooter.ShooterState.ACCELERATING;
+//            }
+//            else if(shooter.state == Shooter.ShooterState.ACCELERATING){
+//                shooter.setShooterVelocity(0,0);
+//                shooter.state = Shooter.ShooterState.FREE;
+//            }
+//        }
+
         CommandScheduler.getInstance().run();
         telemetry.addData("Current Angle", pusher.currentAngle);
         telemetry.addData("Target Angle", pusher.targetAngle);
@@ -170,4 +191,7 @@ public class FGCTeleOpDual extends CommandOpMode {
         telemetry.addData("back shooter velocity", shooter.backShooter.getVelocity());
         updateTelemetry(telemetry);
     }
+
+
+
 }

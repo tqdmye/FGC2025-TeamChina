@@ -16,16 +16,19 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class ShooterTest extends LinearOpMode {
     private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-    public static double setP = 0.1;
-    public static double setI = 0;
-    public static double setD = 0.01;
-    public static double setF = 1;
-    //    public static double setShooterPower = 0.8;
-    public static double setPreShooterPower = 0.8;
+    public static double setFrontP = 2;
+    public static double setFrontI = 0;
+    public static double setFrontD = 0;
+    public static double setFrontF = 13.5;
+    public static double setBackP = 2;
+    public static double setBackI = 0;
+    public static double setBackD = 0;
+    public static double setBackF = 10;
+    public static double setPreShooterPower = 0.9;
     public static boolean isPIDControl = true;
-    public static double shooterMinVelocity = 1040.0;
-    public static double frontShooterVelocity = 1420.0;
-    public static double backShooterVelocity = 2280.0;
+    public static double shooterMinVelocity = 1400.0;
+    public static double frontShooterVelocity = 1500.0;
+    public static double backShooterVelocity = 1700.0;
 
 //    static final double     COUNTS_PER_MOTOR_REV    = 28.0;
 //    static final double     DRIVE_GEAR_REDUCTION    = 30.24;
@@ -63,18 +66,15 @@ public class ShooterTest extends LinearOpMode {
         frontShooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         preShooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         if(isPIDControl) {
-            backShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            frontShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            backShooter.setVelocityPIDFCoefficients(setP, setI, setD, setF);
-            frontShooter.setVelocityPIDFCoefficients(setP, setI, setD, setF);
+//            backShooter.setVelocityPIDFCoefficients(setP, setI, setD, setF);
+            frontShooter.setVelocityPIDFCoefficients(setFrontP, setFrontI, setFrontD, setFrontF);
         }
-        else {
-            backShooter.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            frontShooter.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        }
+
 
         waitForStart();
 

@@ -4,10 +4,8 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.common.constants.Constants;
 import org.firstinspires.ftc.teamcode.common.constants.ServoConstants;
 
 public class Holder extends SubsystemBase {
@@ -28,7 +26,7 @@ public class Holder extends SubsystemBase {
         this.rightHolder = hardwareMap.get(Servo.class, "rightHolder");
     }
 
-    public void hold(){
+    public void holdSolo(){
         state = state == HoldState.OPEN ? HoldState.PREPARE: HoldState.HOLDING;
         if(state == HoldState.PREPARE){
             leftHolder.setPosition(ServoConstants.LEFTHOLDER_PREPARE.value);
@@ -46,7 +44,7 @@ public class Holder extends SubsystemBase {
         rightHolder.setPosition(ServoConstants.RIGHTHOLDER_OPEN.value);
     }
 
-    public void hold_Dual(){
+    public void hold(){
         leftHolder.setPosition(ServoConstants.LEFTHOLDER_HOLD.value);
         rightHolder.setPosition(ServoConstants.RIGHTHOLDER_HOLD.value);
     }

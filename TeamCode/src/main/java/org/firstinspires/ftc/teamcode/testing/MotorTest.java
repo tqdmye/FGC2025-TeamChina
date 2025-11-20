@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.testing;
 
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -12,77 +11,73 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-
 @TeleOp(name = "motor test", group = "test")
 @Config
 public class MotorTest extends LinearOpMode {
 
-    private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-    public static int encoder_position = 1150;
-    public static double max_power = 1;
-    public static int shooterVelocity = 1800;
-    public static boolean read_only = true;
-    public static boolean reverse_0 = false;
-    public static boolean reset = true;
-    public static boolean set_power_mode = false;
-    public static boolean isSetVelocity = false;
-    public static boolean otherMotor = false;
-    public static String motor_name_0 = "backShooter";
-    public static String motor_name_1 = "frontShooter";
+  private final Telemetry telemetry_M =
+      new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+  public static int encoder_position = 1150;
+  public static double max_power = 1;
+  public static int shooterVelocity = 1800;
+  public static boolean read_only = true;
+  public static boolean reverse_0 = false;
+  public static boolean reset = true;
+  public static boolean set_power_mode = false;
+  public static boolean isSetVelocity = false;
+  public static boolean otherMotor = false;
+  public static String motor_name_0 = "backShooter";
+  public static String motor_name_1 = "frontShooter";
 
-
-
-    @Override
-    public void runOpMode() {
-        DcMotorEx motor0 = hardwareMap.get(DcMotorEx.class, motor_name_0);
-        motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        if(otherMotor){
-            DcMotorEx motor1 = hardwareMap.get(DcMotorEx.class, motor_name_1);
-            motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
-        waitForStart();
-        if (reset) {
-            motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-        if (reverse_0) {
-            motor0.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-
-        while (opModeIsActive()) {
-            if (set_power_mode) {
-                if (read_only) {
-                    motor0.setPower(0);
-                }
-                else {
-                    motor0.setPower(max_power);
-                }
-                motor0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            } else {
-                if (!read_only) {
-                    if(isSetVelocity){
-                        motor0.setVelocity(shooterVelocity);
-                    }
-                    else {
-                        motor0.setTargetPosition(encoder_position);
-                        motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        motor0.setPower(max_power);
-
-                        sleep(10000);
-                        motor0.setTargetPosition(0);
-                        motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        motor0.setPower(max_power);
-                    }
-                }
-                telemetry_M.addData("is busy_1", motor0.isBusy());
-//                telemetry_M.addData("encoder_1", motor0.getCurrentPosition());
-//                telemetry_M.addData("is busy_3", motor1.isBusy());
-//                telemetry_M.addData("encoder_2", motor1.getCurrentPosition());
-            }
-            telemetry_M.addData("encoder_0", motor0.getCurrentPosition());
-            telemetry_M.addData("velocity_0", motor0.getVelocity());
-            telemetry_M.update();
-        }
+  @Override
+  public void runOpMode() {
+    DcMotorEx motor0 = hardwareMap.get(DcMotorEx.class, motor_name_0);
+    motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    if (otherMotor) {
+      DcMotorEx motor1 = hardwareMap.get(DcMotorEx.class, motor_name_1);
+      motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
+    waitForStart();
+    if (reset) {
+      motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+      motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    if (reverse_0) {
+      motor0.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    while (opModeIsActive()) {
+      if (set_power_mode) {
+        if (read_only) {
+          motor0.setPower(0);
+        } else {
+          motor0.setPower(max_power);
+        }
+        motor0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+      } else {
+        if (!read_only) {
+          if (isSetVelocity) {
+            motor0.setVelocity(shooterVelocity);
+          } else {
+            motor0.setTargetPosition(encoder_position);
+            motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor0.setPower(max_power);
+
+            sleep(10000);
+            motor0.setTargetPosition(0);
+            motor0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor0.setPower(max_power);
+          }
+        }
+        telemetry_M.addData("is busy_1", motor0.isBusy());
+        //                telemetry_M.addData("encoder_1", motor0.getCurrentPosition());
+        //                telemetry_M.addData("is busy_3", motor1.isBusy());
+        //                telemetry_M.addData("encoder_2", motor1.getCurrentPosition());
+      }
+      telemetry_M.addData("encoder_0", motor0.getCurrentPosition());
+      telemetry_M.addData("velocity_0", motor0.getVelocity());
+      telemetry_M.update();
+    }
+  }
 }

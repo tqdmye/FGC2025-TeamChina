@@ -9,38 +9,35 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class TankDriveCommand extends CommandBase {
-    private final TankDrive tankDrive;
-    private final DoubleSupplier driveSupplier;
-    private final DoubleSupplier turnSupplier;
-    private final BooleanSupplier isSlowMode;
+  private final TankDrive tankDrive;
+  private final DoubleSupplier driveSupplier;
+  private final DoubleSupplier turnSupplier;
+  private final BooleanSupplier isSlowMode;
 
-    public TankDriveCommand(TankDrive tank, DoubleSupplier drive,
-                            DoubleSupplier turn, BooleanSupplier slow) {
-        tankDrive = tank;
-        driveSupplier = drive;
-        turnSupplier = turn;
-        isSlowMode = slow;
+  public TankDriveCommand(
+      TankDrive tank, DoubleSupplier drive, DoubleSupplier turn, BooleanSupplier slow) {
+    tankDrive = tank;
+    driveSupplier = drive;
+    turnSupplier = turn;
+    isSlowMode = slow;
 
-        addRequirements(tankDrive);
+    addRequirements(tankDrive);
+  }
+
+  @Override
+  public void execute() {
+    double drivePower = driveSupplier.getAsDouble();
+    double turnPower = turnSupplier.getAsDouble() * 0.8;
+
+    if (MathUtil.isNear(0, drivePower, 0.001)) {
+      turnPower = turnPower * 1;
     }
 
-    @Override
-    public void execute() {
-        double drivePower = driveSupplier.getAsDouble();
-        double turnPower = turnSupplier.getAsDouble() * 0.8;
-
-        if(MathUtil.isNear(0, drivePower, 0.001)) {
-            turnPower = turnPower * 1;
-        }
-
-        if(isSlowMode.getAsBoolean()) {
-            drivePower = drivePower * 0.6;
-            turnPower = turnPower * 0.8;
-        }
-
-        tankDrive.moveRobot(
-                drivePower,
-                turnPower
-        );
+    if (isSlowMode.getAsBoolean()) {
+      drivePower = drivePower * 0.6;
+      turnPower = turnPower * 0.8;
     }
+
+    tankDrive.moveRobot(drivePower, turnPower);
+  }
 }

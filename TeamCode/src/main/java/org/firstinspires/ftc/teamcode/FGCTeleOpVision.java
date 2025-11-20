@@ -6,10 +6,12 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //import com.arcrobotics.ftclib.command.CommandScheduler;
 //import com.arcrobotics.ftclib.command.InstantCommand;
 //import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+//import com.arcrobotics.ftclib.command.RunCommand;
 //import com.arcrobotics.ftclib.gamepad.GamepadEx;
 //import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 //import com.arcrobotics.ftclib.gamepad.TriggerReader;
 //import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//
 //import org.firstinspires.ftc.teamcode.commands.ShooterCommand;
 //import org.firstinspires.ftc.teamcode.commands.TankDriveCommand;
 //import org.firstinspires.ftc.teamcode.common.constants.Constants;
@@ -19,9 +21,10 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //import org.firstinspires.ftc.teamcode.subsystems.Pusher;
 //import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 //import org.firstinspires.ftc.teamcode.subsystems.TankDrive;
+//import org.firstinspires.ftc.teamcode.subsystems.Vision;
 //
-//@TeleOp(name = "FGC TeleOp Dual")
-//public class FGCTeleOpDual extends CommandOpMode {
+//@TeleOp(name = "FGC TeleOp Vision")
+//public class FGCTeleOpVision extends CommandOpMode {
 //  private TriggerReader triggerReader;
 //  private SlewRateLimiter driverLimiter;
 //  private SlewRateLimiter turnLimiter;
@@ -30,12 +33,14 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //
 //  private TankDrive tankDrive;
 //  private Ascent ascent;
-//  //    private Vision vision;
+//  private Vision vision;
 //  private Shooter shooter;
 //  private Pusher pusher;
 //  private Holder holder;
 //  private GamepadEx gamepadEx1, gamepadEx2;
 //  public State state;
+//  public int frontCount=0;
+//  public int backCount=0;
 //
 //  public enum State {
 //    FREE,
@@ -55,7 +60,7 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //    // Subsystems Initialization
 //    tankDrive = new TankDrive(hardwareMap);
 //    ascent = new Ascent(hardwareMap);
-//    //        vision = new Vision(telemetry, hardwareMap);
+//    vision = new Vision(telemetry, hardwareMap);
 //    shooter = new Shooter(telemetry, hardwareMap);
 //    pusher = new Pusher(telemetry, hardwareMap);
 //    holder = new Holder(telemetry, hardwareMap);
@@ -75,10 +80,9 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //            () -> gamepadEx1.getRightX(),
 //            () -> gamepadEx1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5));
 //
-//    //        gamepadEx1
-//    //                .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-//    //                .whileHeld(new RunCommand(() -> vision.driveWithVision(tankDrive, telemetry,
-//    // true)));
+//            gamepadEx1
+//                    .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+//                    .whileHeld(new RunCommand(() -> vision.driveWithVision(tankDrive, telemetry, true)));
 //
 //    gamepadEx1
 //        .getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
@@ -91,6 +95,22 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //                new InstantCommand(() -> pusher.accelerate()),
 //                new InstantCommand(() -> holder.open())));
 //
+//    gamepadEx1
+//            .getGamepadButton(GamepadKeys.Button.DPAD_UP)
+//            .whenPressed(new InstantCommand(()->++frontCount));
+//
+//    gamepadEx1
+//            .getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+//            .whenPressed(new InstantCommand(()->--frontCount));
+//
+//    gamepadEx1
+//            .getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+//            .whenPressed(new InstantCommand(()->++backCount));
+//
+//    gamepadEx1
+//            .getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+//            .whenPressed(new InstantCommand(()->--backCount));
+//
 //    gamepadEx2.getGamepadButton(GamepadKeys.Button.Y).whileHeld(new ShooterCommand(shooter));
 //    gamepadEx2
 //        .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
@@ -100,8 +120,8 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //                new InstantCommand(
 //                    () ->
 //                        shooter.setShooterVelocity(
-//                            Constants.FRONT_SHOOTER_VELOCITY.value,
-//                            Constants.BACK_SHOOTER_VELOCITY.value))))
+//                            Constants.FRONT_SHOOTER_VELOCITY.value+frontCount*20,
+//                            Constants.BACK_SHOOTER_VELOCITY.value+backCount*20))))
 //        .whenReleased(new InstantCommand(() -> shooter.setShooterVelocity(0, 0)));
 //    gamepadEx2
 //        .getGamepadButton(GamepadKeys.Button.X)
@@ -189,7 +209,9 @@ package org.firstinspires.ftc.teamcode;//package org.firstinspires.ftc.teamcode;
 //    telemetry.addData("Current Angle", pusher.currentAngle);
 //    telemetry.addData("Target Angle", pusher.targetAngle);
 //    telemetry.addData("State", pusher.currentState);
+//    telemetry.addData("front shooter target velocity", Constants.FRONT_SHOOTER_VELOCITY.value+frontCount*20);
 //    telemetry.addData("front shooter velocity", shooter.frontShooter.getVelocity());
+//    telemetry.addData("back shooter target velocity", Constants.BACK_SHOOTER_VELOCITY.value+backCount*20);
 //    telemetry.addData("back shooter velocity", shooter.backShooter.getVelocity());
 //    updateTelemetry(telemetry);
 //  }

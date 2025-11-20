@@ -1,6 +1,7 @@
-//package org.firstinspires.ftc.teamcode.common.constants;
+package org.firstinspires.ftc.teamcode.common.constants; // package
+                                                         // org.firstinspires.ftc.teamcode.common.constants;
 //
-//public enum MotorConstants {
+// public enum MotorConstants {
 //    ASCENT(1333)
 //    ;
 //
@@ -9,4 +10,4 @@
 //    MotorConstants(int value) {
 //        this.value = value;
 //    }
-//}
+// }

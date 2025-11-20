@@ -1,17 +1,17 @@
-//package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.testing; // package org.firstinspires.ftc.teamcode.testing;
 //
-//import com.acmerobotics.dashboard.FtcDashboard;
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-//import com.qualcomm.robotcore.hardware.DcMotor;
-//import com.qualcomm.robotcore.hardware.DcMotorEx;
-//import com.qualcomm.robotcore.hardware.DcMotorSimple;
+// import com.acmerobotics.dashboard.FtcDashboard;
+// import com.acmerobotics.dashboard.config.Config;
+// import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+// import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+// import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+// import com.qualcomm.robotcore.hardware.DcMotor;
+// import com.qualcomm.robotcore.hardware.DcMotorEx;
+// import com.qualcomm.robotcore.hardware.DcMotorSimple;
 //
-//@TeleOp(name = "PIDSecondSlideTest")
-//@Config
-//public class PIDSecondSlideTest extends LinearOpMode {
+// @TeleOp(name = "PIDSecondSlideTest")
+// @Config
+// public class PIDSecondSlideTest extends LinearOpMode {
 //  private final MultipleTelemetry mTelemetry =
 //      new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //  private static double slideHeightTicks = 0;
@@ -73,4 +73,4 @@
 //        mTelemetry.update();
 //    }
 //  }
-//}
+// }

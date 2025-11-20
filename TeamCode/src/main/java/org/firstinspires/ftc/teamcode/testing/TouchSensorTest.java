@@ -1,21 +1,22 @@
-//package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.testing; // package org.firstinspires.ftc.teamcode.testing;
 //
-//import com.acmerobotics.dashboard.FtcDashboard;
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-//import com.qualcomm.robotcore.hardware.TouchSensor;
+// import com.acmerobotics.dashboard.FtcDashboard;
+// import com.acmerobotics.dashboard.config.Config;
+// import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+// import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+// import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+// import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+// import com.qualcomm.robotcore.hardware.TouchSensor;
 //
-//import org.firstinspires.ftc.robotcore.external.Telemetry;
+// import org.firstinspires.ftc.robotcore.external.Telemetry;
 //
-//@Config
-//@TeleOp(name = "TouchSensor")
-//public class TouchSensorTest extends LinearOpMode {
+// @Config
+// @TeleOp(name = "TouchSensor")
+// public class TouchSensorTest extends LinearOpMode {
 //    //private TouchSensor magnetic;
 //    //private DistanceSensor distanceSensor;
-//    private Telemetry mTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//    private Telemetry mTelemetry = new MultipleTelemetry(telemetry,
+// FtcDashboard.getInstance().getTelemetry());
 //    private TelemetryPacket packet = new TelemetryPacket();
 //    private TouchSensor upperMag;
 //    private TouchSensor lowerMag;
@@ -34,8 +35,9 @@
 //            mTelemetry.addData("Lower Trigger", lowerMag.isPressed());
 ////            mTelemetry.addData("Is Magnetic Triggerd", touch.isPressed());
 ////            mTelemetry.addData("Value of Magnetic", touch.getValue());
-////            mTelemetry.addData("Distance of Sensor", distanceSensor.getDistance(DistanceUnit.CM));
+////            mTelemetry.addData("Distance of Sensor",
+// distanceSensor.getDistance(DistanceUnit.CM));
 //            mTelemetry.update();
 //        }
 //    }
-//}
+// }

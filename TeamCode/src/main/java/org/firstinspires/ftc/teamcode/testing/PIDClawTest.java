@@ -1,21 +1,23 @@
-//package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.testing; // package
+                                                // org.firstinspires.ftc.teamcode.subsystems;
 //
-//import com.acmerobotics.dashboard.FtcDashboard;
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.arcrobotics.ftclib.controller.PIDController;
-//import com.arcrobotics.ftclib.controller.PIDFController;
-//import com.arcrobotics.ftclib.hardware.motors.Motor;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+// import com.acmerobotics.dashboard.FtcDashboard;
+// import com.acmerobotics.dashboard.config.Config;
+// import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+// import com.arcrobotics.ftclib.controller.PIDController;
+// import com.arcrobotics.ftclib.controller.PIDFController;
+// import com.arcrobotics.ftclib.hardware.motors.Motor;
+// import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+// import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //
-//import org.firstinspires.ftc.robotcore.external.Telemetry;
+// import org.firstinspires.ftc.robotcore.external.Telemetry;
 //
 //
-//@Config
-//@TeleOp(name = "Claw Test")
-//public class PIDClawTest extends LinearOpMode {
-//    private Telemetry mTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+// @Config
+// @TeleOp(name = "Claw Test")
+// public class PIDClawTest extends LinearOpMode {
+//    private Telemetry mTelemetry = new MultipleTelemetry(telemetry,
+// FtcDashboard.getInstance().getTelemetry());
 //
 //    private Motor mLeftClawMotor;
 //    private Motor.Encoder mLeftEncoder;
@@ -88,4 +90,4 @@
 //
 //
 //    }
-//}
+// }

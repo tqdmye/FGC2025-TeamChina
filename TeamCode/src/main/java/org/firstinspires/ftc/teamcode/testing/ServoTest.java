@@ -13,27 +13,28 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class ServoTest extends LinearOpMode {
 
-    private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-    public static boolean read_only = false;
-    public static boolean reverse = false;
-    public static double servo_pos1 = 0.5;
+  private final Telemetry telemetry_M =
+      new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+  public static boolean read_only = false;
+  public static boolean reverse = false;
+  public static double servo_pos1 = 0.5;
 
-    public static String servo_name1 = "brakeAscent";
-    private Servo servo0 = null;
+  public static String servo_name1 = "brakeAscent";
+  private Servo servo0 = null;
 
-    @Override
-    public void runOpMode() {
+  @Override
+  public void runOpMode() {
 
-        servo0 = hardwareMap.get(Servo.class, servo_name1);
-        if (reverse){
-            servo0.setDirection(Servo.Direction.REVERSE);
-        }
-        waitForStart();
-        while (opModeIsActive()) {
-            servo0.setPosition(servo_pos1);
-            telemetry_M.addData(servo_name1, servo0.getPosition());
-
-            telemetry_M.update();
-        }
+    servo0 = hardwareMap.get(Servo.class, servo_name1);
+    if (reverse) {
+      servo0.setDirection(Servo.Direction.REVERSE);
     }
+    waitForStart();
+    while (opModeIsActive()) {
+      servo0.setPosition(servo_pos1);
+      telemetry_M.addData(servo_name1, servo0.getPosition());
+
+      telemetry_M.update();
+    }
+  }
 }

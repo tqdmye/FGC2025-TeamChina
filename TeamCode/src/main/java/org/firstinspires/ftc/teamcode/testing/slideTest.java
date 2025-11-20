@@ -1,22 +1,23 @@
-//package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.testing; // package org.firstinspires.ftc.teamcode.testing;
 //
-//import com.acmerobotics.dashboard.FtcDashboard;
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-//import com.qualcomm.robotcore.hardware.DcMotor;
-//import com.qualcomm.robotcore.hardware.DcMotorEx;
-//import com.qualcomm.robotcore.hardware.DcMotorSimple;
+// import com.acmerobotics.dashboard.FtcDashboard;
+// import com.acmerobotics.dashboard.config.Config;
+// import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+// import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+// import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+// import com.qualcomm.robotcore.hardware.DcMotor;
+// import com.qualcomm.robotcore.hardware.DcMotorEx;
+// import com.qualcomm.robotcore.hardware.DcMotorSimple;
 //
-//import org.firstinspires.ftc.robotcore.external.Telemetry;
+// import org.firstinspires.ftc.robotcore.external.Telemetry;
 //
 //
-//@TeleOp
-//@Config
-//public class slideTest extends LinearOpMode {
+// @TeleOp
+// @Config
+// public class slideTest extends LinearOpMode {
 //
-//    private final Telemetry telemetry_M = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//    private final Telemetry telemetry_M = new MultipleTelemetry(telemetry,
+// FtcDashboard.getInstance().getTelemetry());
 //    public static int frontSlidePos = 0;
 //    public static int backSlidePos = 0;
 //    public static double max_power = 1;
@@ -103,12 +104,15 @@
 //            telemetry_M.addData("Power backRightSlide", backRightLift_Motor.getPower());
 //
 //
-//            telemetry_M.addData("encoder_frontLeftSlide", frontLeftLift_Motor.getCurrentPosition());
-//            telemetry_M.addData("encoder_frontRightSlide", frontRightLift_Motor.getCurrentPosition());
+//            telemetry_M.addData("encoder_frontLeftSlide",
+// frontLeftLift_Motor.getCurrentPosition());
+//            telemetry_M.addData("encoder_frontRightSlide",
+// frontRightLift_Motor.getCurrentPosition());
 //            telemetry_M.addData("encoder_backLeftSlide", backLeftLift_Motor.getCurrentPosition());
-//            telemetry_M.addData("encoder_backRightSlide", backRightLift_Motor.getCurrentPosition());
+//            telemetry_M.addData("encoder_backRightSlide",
+// backRightLift_Motor.getCurrentPosition());
 //
 //            telemetry_M.update();
 //        }
 //    }
-//}
+// }

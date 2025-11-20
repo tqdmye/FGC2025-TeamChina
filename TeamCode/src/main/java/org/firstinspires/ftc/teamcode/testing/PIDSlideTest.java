@@ -1,19 +1,20 @@
-//package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.testing; // package org.firstinspires.ftc.teamcode.testing;
 //
-//import com.acmerobotics.dashboard.FtcDashboard;
-//import com.acmerobotics.dashboard.config.Config;
-//import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-//import com.arcrobotics.ftclib.hardware.motors.Motor;
-//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+// import com.acmerobotics.dashboard.FtcDashboard;
+// import com.acmerobotics.dashboard.config.Config;
+// import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+// import com.arcrobotics.ftclib.hardware.motors.Motor;
+// import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+// import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //
-//import org.firstinspires.ftc.robotcore.external.Telemetry;
+// import org.firstinspires.ftc.robotcore.external.Telemetry;
 //
-//@TeleOp(name = "PIDSlideTest")
-//@Config
-//public class PIDSlideTest extends LinearOpMode {
+// @TeleOp(name = "PIDSlideTest")
+// @Config
+// public class PIDSlideTest extends LinearOpMode {
 //    //private TelemetryPacket packet = new TelemetryPacket();
-//    private final Telemetry mTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//    private final Telemetry mTelemetry = new MultipleTelemetry(telemetry,
+// FtcDashboard.getInstance().getTelemetry());
 //    public static int leftSlideHeightTicks = 0;
 //    public static int rightSlideHeightTicks = 0;
 //    public static double setP = 0.1;
@@ -135,7 +136,8 @@
 //            mTelemetry.addData("BackRight Slide Ticks", mBackRightSlide.getCurrentPosition());
 //
 //            mTelemetry.addData("Acceleration", mFrontLeftSlide.encoder.getAcceleration());
-//            mTelemetry.addData("CorrectedVelocity", mFrontLeftSlide.encoder.getCorrectedVelocity());
+//            mTelemetry.addData("CorrectedVelocity",
+// mFrontLeftSlide.encoder.getCorrectedVelocity());
 //            mTelemetry.addData("Velocity", mFrontLeftSlide.encoder.getRawVelocity());
 //
 //            //mTelemetry.addData("Tick Velocity", mFrontLeftSlide.();)
@@ -143,4 +145,4 @@
 //        }
 //
 //    }
-//}
+// }

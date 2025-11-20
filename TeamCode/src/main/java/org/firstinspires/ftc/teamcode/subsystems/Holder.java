@@ -9,47 +9,49 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.constants.ServoConstants;
 
 public class Holder extends SubsystemBase {
-  private final Telemetry telemetry;
-  public Servo leftHolder, rightHolder;
-  public AnalogInput potentiometer;
-  private HoldState state;
+    private final Telemetry telemetry;
+    public Servo leftHolder, rightHolder;
+    public AnalogInput potentiometer;
+    private HoldState state;
 
-  public enum HoldState {
-    HOLDING,
-    OPEN,
-    PREPARE;
-  }
-
-  public Holder(Telemetry telemetry, HardwareMap hardwareMap) {
-    this.telemetry = telemetry;
-    this.leftHolder = hardwareMap.get(Servo.class, "leftHolder");
-    this.rightHolder = hardwareMap.get(Servo.class, "rightHolder");
-  }
-
-  public void holdSolo() {
-    state = state == HoldState.OPEN ? HoldState.PREPARE : HoldState.HOLDING;
-    if (state == HoldState.PREPARE) {
-      leftHolder.setPosition(ServoConstants.LEFTHOLDER_PREPARE.value);
-      rightHolder.setPosition(ServoConstants.RIGHTHOLDER_PREPARE.value);
-    } else {
-      leftHolder.setPosition(ServoConstants.LEFTHOLDER_HOLD.value);
-      rightHolder.setPosition(ServoConstants.RIGHTHOLDER_HOLD.value);
+    public enum HoldState {
+        HOLDING,
+        OPEN,
+        PREPARE;
     }
-  }
 
-  public void open() {
-    state = HoldState.OPEN;
-    leftHolder.setPosition(ServoConstants.LEFTHOLDER_OPEN.value);
-    rightHolder.setPosition(ServoConstants.RIGHTHOLDER_OPEN.value);
-  }
+    public Holder(Telemetry telemetry, HardwareMap hardwareMap) {
+        this.telemetry = telemetry;
+        this.leftHolder = hardwareMap.get(Servo.class, "leftHolder");
+        this.rightHolder = hardwareMap.get(Servo.class, "rightHolder");
+    }
 
-  public void hold() {
-    leftHolder.setPosition(ServoConstants.LEFTHOLDER_HOLD.value);
-    rightHolder.setPosition(ServoConstants.RIGHTHOLDER_HOLD.value);
-  }
+    public void holdSolo(){
+        state = state == HoldState.OPEN ? HoldState.PREPARE: HoldState.HOLDING;
+        if(state == HoldState.PREPARE){
+            leftHolder.setPosition(ServoConstants.LEFTHOLDER_PREPARE.value);
+            rightHolder.setPosition(ServoConstants.RIGHTHOLDER_PREPARE.value);
+        }
+        else{
+            leftHolder.setPosition(ServoConstants.LEFTHOLDER_HOLD.value);
+            rightHolder.setPosition(ServoConstants.RIGHTHOLDER_HOLD.value);
+        }
+    }
 
-  public void prepare() {
-    leftHolder.setPosition(ServoConstants.LEFTHOLDER_PREPARE.value);
-    rightHolder.setPosition(ServoConstants.RIGHTHOLDER_PREPARE.value);
-  }
+    public void open(){
+        state = HoldState.OPEN;
+        leftHolder.setPosition(ServoConstants.LEFTHOLDER_OPEN.value);
+        rightHolder.setPosition(ServoConstants.RIGHTHOLDER_OPEN.value);
+    }
+
+    public void hold(){
+        leftHolder.setPosition(ServoConstants.LEFTHOLDER_HOLD.value);
+        rightHolder.setPosition(ServoConstants.RIGHTHOLDER_HOLD.value);
+    }
+
+    public void prepare(){
+        leftHolder.setPosition(ServoConstants.LEFTHOLDER_PREPARE.value);
+        rightHolder.setPosition(ServoConstants.RIGHTHOLDER_PREPARE.value);
+    }
+
 }
